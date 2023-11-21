@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FinEdu-S&P500</title>
+
+    <link rel="stylesheet" href="{{url_for('static', filename='css/style.css')}}">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/plotly.js/2.27.0/plotly.min.js"
+        integrity="sha512-2yjH2FQFIKp1XQ8nSWes+7/zWAPc9qfDolxFGJV1BUO7/+YIAPh1jICUN6TaA+VVlfabERCqo1Hji0yYTFtDew=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" async defer></script>
+
+</head>
+{% block content %}
+{% include 'navbar.html' %}
+<script defer src="static/js/sp500.js"></script>
+
+<body onload="sp500norm()">
+    <div class="container-sp500">
+        <div class="container-sp500chart">
+            {% include '_messages.html' %}
+            <div class="sp500chart" id="sp500chart">
+                <script type="text/javascript">
+                    var graphs = {{ norm_graph | safe}};
+                    Plotly.newPlot('sp500chart', graphs, {})
+                </script>
+            </div>
+        </div>
+
+        <div class="container-sp500-gain-loss">
+            <div class="container-sp500-gain-loss-child-1">
+                <p align='justify' id="sp500-norm"></p>
+            </div>
+
+            <div class="container-sp500-gain-loss-child-2">
+                <form class="sp500-gain-loss" onsubmit="return gainOrloss();">
+                    <input class="gain-loss-input" type="text" id='start-price' placeholder="Valor inicial">
+                    <input class="gain-loss-input" type="text" id='end-price' placeholder="Valor final">
+
+                    <button class="gain-loss-button" id="calc" type="button">Calcular</button>
+
+                    <button class="gain-loss-button" type="button" id="btn">Limpar</button>
+
+                    <input class="gain-loss-result" type="text" id="result" placeholder="Retorno">
+                </form>
+            </div>
+        </div>
+
+
+        <div class="container-sp500-comp">
+            <div class="sp500chart-comp" id="sp500comp">
+                <script type="text/javascript">
+                    var graphs = {{ comp_norm_graph | safe}};
+                    Plotly.newPlot('sp500comp', graphs, {})
+
+                </script>
+
+            </div>
+
+        </div>
+
+
+
+
+
+</body>
+
+
+{% endblock %}
+
+</html>

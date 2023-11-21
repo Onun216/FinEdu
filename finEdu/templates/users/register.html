@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registar</title>
+
+    <link rel="stylesheet" href="{{url_for('static', filename='css/style.css')}}">
+
+</head>
+{% block content %}
+{% from "_formhelpers.html" import render_field %}
+<div class="container-fluid">
+
+    <nav>
+        <div class="heading">
+            <h1 class="Navigation-Bar">
+                </h4>
+        </div>
+
+        <ul class="nav-links">
+            <li class="home">
+                <a href="/">FinEdu</a>
+            </li>
+
+            <li class="login">
+                <a href="/login">LogIn</a>
+            </li>
+
+            <li class="register">
+                <a href="/register">Registar</a>
+            </li>
+
+        </ul>
+    </nav>
+
+</div>
+
+<body>
+
+    <div class="container-register">
+        {% include '_messages.html' %}
+        <form action="/register" method="post" class="register-form">
+            {{form.csrf_token}}
+            <div>
+
+                <label for="">Nome</label>
+                {{ form.name(class="form-control-input") }}
+
+                <label for="">Email</label>
+                {{ form.email(class="form-control-input") }}
+
+                <label for="">Password</label>
+                {{ form.password(class="form-control-input") }}
+
+                <label for="">Repetir password</label>
+                {{ form.confirm(class="form-control-input") }}
+
+                <button class="register-button" type="submit">Registar</button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+
+
+
+</body>
+{% endblock %}
+
+</html>

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FinEdu-Banca</title>
+
+    <link rel="stylesheet" href="{{url_for('static', filename='css/style.css')}}">
+
+</head>
+{% block content %}
+{% include 'navbar.html' %}
+
+<body>
+
+    <div class="container-banking-intro"></div>
+
+    <div class="container-banking">
+        <div class="container-mortgage">
+            {% include '_messages.html' %}
+            <form method="post" enctype="multipart/form-data">
+                <label for="">Preço do Imóvel</label>
+                {{ form.purchase_price(class="form-control") }}
+
+                <label for="">Valor máximo do Empréstimo (%)</label>
+                {{ form.max_loan(class="form-control") }}
+
+                <label for="">Taxa de juro (%)</label>
+                {{ form.interest_rate(class="form-control") }}
+
+                <label for="">Número de anos</label>
+                {{ form.period(class="form-control") }}
+
+                <label for="">Taxa de Esforço</label>
+                {{ form.dscr(class="form-control") }}
+
+                <label for="">Rendimento disponível</label>
+                {{ form.available_income(class="form-control") }}
+
+                <label for="">Montante final a pagar</label>
+                {{ form.outstanding_loan(class="form-control") }}
+
+                <p></p>
+                {% if request.method == 'GET' %}
+                <button class="btn btn-outline-primary" type="submit">Calcular</button>
+                {% endif %}
+                {% if request.method == 'POST' %}
+                <a href="/banking" class="button">Limpar</a>   
+                {% endif %}
+            </form>
+        </div>
+        {% if request.method == 'GET' %}
+        <div class="container-mortgage-info-primary">
+            {% include '_messages.html' %}
+            <div class="border">
+                <div class="mortgage-info">
+                    <label for="" class="mortgage-info-text">Em construção</label>
+                    <p align="justify" class="mortgage-info-text-elem">
+                       Exemplo
+                    </p>
+                    <p align="justify" class="mortgage-info-text-elem">
+                    </p>
+
+                    <label for="" class="mortgage-info-text">Valor máximo do empréstimo</label>
+                    <p align="justify" class="mortgage-info-text-elem">
+                        Está relacionado com o preço do imóvel e representa, em percentagem, quanto é que queremos pedir de empréstimo ao banco.
+                        Se quisermos pedir metade do valor do imóvel, escolhemos 50%. Se temos apenas 25% do valor correspondente ao preço do Imóvel
+                        temos que pedir de empréstimo ao banco 75%. 
+                    </p>
+                    <p align="justify" class="mortgage-info-text-elem">
+                        Assim, podemos estipular à partida até onde é que queremos ou podemos ir em termos de limite máximo do empréstimo. 
+                    </p>
+
+                    <label for="" class="mortgage-info-text">Taxa de esforço</label>
+                    <p align="justify" class="mortgage-info-text-elem">
+                        O valor padrão está situado nos 3. Uma taxa de esforço de 3 significa que estamos dispostos a utilizar apenas 1/3 do nosso rendimento total disponível no
+                        pagamento do prestação mensal. 
+                    </p>
+                    <p align="justify" class="mortgage-info-text-elem">
+                       Dedicar 1/3 do nosso rendimento total disponível ao pagamento da prestação é considerado uma boa prática, com uma margem de segurança confortável. 
+                    </p>
+
+                    <label for="" class="mortgage-info-text">Rendimento disponível</label>
+                    <p align="justify" class="mortgage-info-text-elem">
+                        Corresponde ao rendimento mensal total disponível. 
+                    </p>
+
+                    <label for="" class="mortgage-info-text">Montante final a pagar</label>
+                    <p align="justify" class="mortgage-info-text-elem">
+                        Em construção
+                    </p>
+
+                    <label for="" class="mortgage-info-text">Comprar ou Arrendar?</label>
+                    <p align="justify" class="mortgage-info-text-elem">
+                        Comprar ou arrendar, qual a melhor opção? 
+                        Consulta os números aqui!
+                    </p>
+                    <a href="/buy-vs-rent">
+                        <button class="btn btn-outline-primary" id="go-to-br-model">Avançar</button>
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        {% endif %}
+        {% if request.method == 'POST' %}
+        <div class="container-mortgage-info">
+            {% include '_messages.html' %}
+            <div class="border">
+                <div class="mortgage-info">
+
+                </div>
+
+                <div class="mortgage-info">
+                    <label for="" class="mortgage-info-text">Taxa efectiva de juro:</label>
+                    <p class="mortgage-info-text-elem">{{("%0.3f"|format(l_terms[0]|float))|float * 100}}%</p>
+                </div>
+
+                <div class="mortgage-info">
+                    <label for="" class="mortgage-info-text">Rendimento disponível ajustado à taxa de esforço:</label>
+                    <p class="mortgage-info-text-elem">€{{("%0.3f"|format(l_terms[1]|float))|float * -1}}</p>
+                </div>
+
+                <div class="mortgage-info">
+                    <label for="" class="mortgage-info-text">Valor máximo teórico do empréstimo:</label>
+                    <p class="mortgage-info-text-elem">€{{("%0.3f"|format(l_terms[2]|float))|float}}</p>
+                </div>
+
+                <div class="mortgage-info">
+                    <label for="" class="mortgage-info-text">Valor máximo do empréstimo ajustado ao preço do imóvel
+                        ({{max_loan}}% do valor do imóvel):</label>
+                    <p class="mortgage-info-text-elem">€{{("%0.3f"|format(l_terms[3]|float))|float}}</p>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    {% if request.method == 'POST' %}
+    <div class="container-banking-2">
+        <div class="container-mortgage-graph">
+            {% include '_messages.html' %}
+            <div class="border">
+                <img src="static/img/mortgage_graph.png" alt="O gráfico não pode ser mostrado">
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+
+
+
+
+</body>
+{% endblock %}
+
+</html>

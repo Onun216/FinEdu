@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FinEdu-Comprar vs Arrendar</title>
+
+    <link rel="stylesheet" href="{{url_for('static', filename='css/style.css')}}">
+
+</head>
+{% block content %}
+{% include 'navbar.html' %}
+<script defer src="static/js/buy_vs_rent.js"></script>
+
+<body onload="infoEuribor(); infoSpread(); infoTAN(); infoTAEG()">
+    <div class="container-financing">
+        <form class="financing-data" method="post" enctype="multipart/form-data">
+            <h4 class="financing-data-header">Dados do Financiamento</h4>
+            <label for="">Valor a financiar</label>
+            {{ form.value(class="form-control") }}
+
+            <label for="">Prazo do financiamento (anos)</label>
+            {{ form.period(class="form-control") }}
+
+            <label for="">Euribor (%)</label>
+            {{ form.euribor(class="form-control") }}
+
+            <label for="">Spread (%)</label>
+            {{ form.spread(class="form-control") }}
+
+            <label for="">TAEG (%)</label>
+            {{ form.taeg(class="form-control") }}
+
+            <label for="">Custo da amortização antecipada</label>
+            {{ form.early_amort(class="form-control") }}
+
+            <p></p>
+            <p>Custos iniciais com o financiamento</p>
+
+            <label for="">Comissão de avaliação</label>
+            {{ form.eval_comission(class="form-control") }}
+
+            <label for="">Comissão de dossier</label>
+            {{ form.dossier_comission(class="form-control") }}
+
+            <label for="">Comissão de formalização</label>
+            {{ form.form_comssion(class="form-control") }}
+
+            <label for="">Outros custos diversos</label>
+            {{ form.other_costs(class="form-control") }}
+
+            <label for="">Emolumentos pelo registo da hipoteca</label>
+            {{ form.mortage_costs(class="form-control") }}
+
+            <label for="">Imposto de selo do contracto de financiamento</label>
+            {{ form.financing_tax(class="form-control") }}
+
+            <p></p>
+            {% if request.method == 'GET' %}
+            <button class="btn btn-outline-primary" type="submit">Calcular</button>
+            {% endif %}
+            {% if request.method == 'POST' %}
+
+            <a href="/buy-vs-rent" class="button">Limpar</a>
+            {% endif %}
+        </form>
+
+        <div class="container-financing-plan">
+            {% if request.method == 'GET' %}
+            <p class="financing-plan-info">Euribor</p>
+            <p id="info-euribor"></p>
+
+            <p class="financing-plan-info">Spread</p>
+            <p id="info-spread"></p>
+
+            <p class="financing-plan-info">TAN</p>
+            <p id="info-tan"></p>
+
+            <p class="financing-plan-info">TAEG</p>
+            <p id="info-taeg"></p>
+
+            <p class="financing-plan-info">Taxa de esforço</p>
+            <p id="info-dscr"></p>       
+            {% endif %}
+
+            {% if request.method == 'POST' %}
+            {% set tan = euribor|float + spread|float %}
+            {% set insurance_costs = taeg|float - tan|float %}
+            {% set total_initial_costs = eval_comission|float + dossier_comission|float + form_comission|float
+            + other_costs|float + mortgage_costs|float + financing_tax|float %}
+            <p>TAN - Taxa Anual Nominal</p>
+            {{ "%0.3f"|format(tan) }}%
+            <p>Seguros e custos de financiamento</p>
+            {{ "%0.3f"|format(insurance_costs) }}%
+            <p>Custos iniciais de financiamento - TOTAL</p>
+            {{ "%0.2f"|format(total_initial_costs) }}€
+
+            <p></p>
+            <p></p>
+            <table class="financing-plan">
+                <caption class="financing-plan-title">Plano de financiamento a {{period|int * 12|int}} meses</caption>
+                <thead>
+                    <tr>
+                        <th class="buy-or-rent-table-text-header">Ano</th>
+                        <th class="buy-or-rent-table-text-header">Prestações</th>
+                        <th class="buy-or-rent-table-text-header">Amortização do capital</th>
+                        <th class="buy-or-rent-table-text-header">Juros</th>
+                        <th class="buy-or-rent-table-text-header">Outros custos</th>
+
+                        <th class="buy-or-rent-table-text-header">Total a pagar por mês</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for row in table %}
+                    <tr>
+                        {% for col in row %}
+                        {% if loop.index0 == 0 %}
+                        <td class="buy-or-rent-table-text-year">{{ col }}º ano</td>
+                        {% else %}
+                        <td class="buy-or-rent-table-text-data">{{"%0.2f"|format(col)}}€</td>
+                        {% endif %}
+
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <p class="total-pmts">Valor total das prestações</p>
+            <p class="total-pmts-text">{{"%0.2f"|format(total_pmts)}}€</p>
+            <p></p>
+
+            {% if total_loan_values_sum %}
+            <p class="buy-or-rent-value-over-time">Valor da dívida ao fim de 5 anos: {{ "%0.2f"|format(value|float -
+                total_loan_values_sum[0]|float) }}€ </p>
+            <p class="buy-or-rent-value-over-time">Valor da dívida ao fim de 10 anos: {{ "%0.2f"|format(value|float -
+                total_loan_values_sum[1]|float) }}€ </p>
+            <p class="buy-or-rent-value-over-time">Valor da dívida ao fim de 15 anos: {{ "%0.2f"|format(value|float -
+                total_loan_values_sum[2]|float) }}€ </p>
+            <p class="buy-or-rent-value-over-time">Valor da dívida ao fim de 20 anos: {{ "%0.2f"|format(value|float -
+                total_loan_values_sum[3]|float) }}€ </p>
+            <p class="buy-or-rent-value-over-time">Valor da dívida ao fim de 25 anos: {{ "%0.2f"|format(value|float -
+                total_loan_values_sum[4]|float) }} </p>
+            <p class="buy-or-rent-value-over-time">Valor da dívida ao fim de 30 anos: {{ "%0.2f"|format(value|float -
+                total_loan_values_sum[5]|float) }}€ </p>
+            <p class="buy-or-rent-value-over-time">Valor da dívida ao fim de 35 anos: {{ "%0.2f"|format(value|float -
+                total_loan_values_sum[6]|float) }}€ </p>
+            <p class="buy-or-rent-value-over-time">Valor da dívida ao fim de 40 anos: </p>
+            {% endif %}
+            {% endif %}
+        </div>
+    </div>
+
+
+
+
+</body>
+{% endblock %}
+
+</html>

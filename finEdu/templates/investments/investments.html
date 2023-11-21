@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FinEdu-Investimentos</title>
+
+    <link rel="stylesheet" href="{{url_for('static', filename='css/style.css')}}">
+</head>
+{% block content %}
+{% include 'navbar.html' %}
+<script defer src="static/js/investment_info.js"></script>
+
+<body>
+
+    <div class="container-investments">
+        <div class="investment-child-1">
+            <div class="card-investments">
+                <input type="button" onclick="stockInfo()" value="Ações" class="btn-info" id="stock-info">
+                <a href="#" class="button">Em construção</a>
+            </div>
+
+
+            <div class="card-investments">
+                <input type="button" onclick="indexInfo()" value="Índice" class="btn-info" id="index-info">
+                <a href="/index-performance" class="button">Performance</a>
+                <a href="#" class="button">Simulações</a>
+            </div>
+
+            <div class="card-investments">
+                <input type="button" onclick="bondInfo()" value="Obrigações" class="btn-info" id="bond-info">
+                <a href="#" class="button">Simulações</a>
+            </div>
+        </div>
+
+        <div class="investment-child-2">
+            <p align="justify" class="container-index-info" id="investment-info"></p>           
+        </div>
+
+       
+
+    </div>
+
+
+
+
+</body>
+
+{% endblock %}
+
+</html>

@@ -1,0 +1,56 @@
+<div class="container-fluid">
+
+    <nav>
+        <div class="heading">
+            <h1 class="Navigation-Bar"></h4>
+        </div>
+    
+        <ul class="nav-links">
+            <li class="home">
+                <a href="/">FinEdu</a>
+            </li>
+    
+            <li class="investments" >
+                <a href="/investments" >Investimentos</a>
+            </li>
+    
+            <li class="banking">
+                <a href="/banking">Banca</a>
+            </li>
+
+            <li class="market">
+                <a href="#">Mercados</a>
+            </li>
+
+            <li class="glossary">
+                <a href="#">Glossário</a>
+            </li>
+
+            <li class="portfolio">
+                <a href="/portfolio-home">Portfolio</a>
+            </li>
+
+            {% if current_user.is_authenticated %}
+            <li class="username">
+                <a href="#">{{ current_user.name }}</a>
+            </li>
+
+            <li class="logout">
+                <a href="/logout">Logout</a>
+            </li>
+            {% else %}
+            <li class="login">
+                <a href="/login">LogIn</a>
+            </li>
+
+            <li class="register">
+                <a href="/register">Registar</a>
+            </li>
+            {% endif %}
+
+           
+
+        </ul>
+    </nav>
+    
+</div>

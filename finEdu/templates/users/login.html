@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LogIn</title>
+
+    <link rel="stylesheet" href="{{url_for('static', filename='css/style.css')}}">
+
+</head>
+{% block content %}
+<div class="container-fluid">
+
+    <nav>
+        <div class="heading">
+            <h1 class="Navigation-Bar"></h4>
+        </div>
+    
+        <ul class="nav-links">
+            <li class="home">
+                <a href="/">FinEdu</a>
+            </li>
+    
+            <li class="investments" >
+                <a href="/investments" >Investimentos</a>
+            </li>
+    
+            <li class="banking">
+                <a href="/banking">Banca</a>
+            </li>
+
+            <li class="market">
+                <a href="#">Mercados</a>
+            </li>
+
+            <li class="glossary">
+                <a href="#">Glossário</a>
+            </li>
+
+            <li class="portfolio">
+                <a href="/portfolio-home">Portfolio</a>
+            </li>
+
+            <li class="login">
+                <a href="/login">LogIn</a>
+            </li>
+
+        </ul>
+    </nav>
+    
+</div>
+
+<body>
+    <div class="container-login">
+
+        {% include '_messages.html' %}
+        {% from "_formhelpers.html" import render_field %}
+        <form method="post" class="login-form">
+            {{form.csrf_token}}
+            <div>
+                <label for="">Email</label>
+                {{ form.email(class="form-control-input") }}
+
+                <label for="">Password</label>
+                {{ form.password(class="form-control-input") }}
+            </div>
+
+            <button value="Login" class="login-button" type="submit">Login</button>
+            
+        </form>
+    </div>
+
+
+
+</body>
+{% endblock %}
+
+</html>

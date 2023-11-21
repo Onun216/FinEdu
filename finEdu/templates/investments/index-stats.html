@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FinEdu-Ações</title>
+
+    <link rel="stylesheet" href="{{url_for('static', filename='css/style.css')}}">
+
+</head>
+{% block content %}
+{% include 'navbar.html' %}
+<script defer src="static/js/index_info.js"></script>
+
+<body onload="sp500Info();djiInfo();ndqCompInfo();russell2000Info()">
+    {% if request.method == 'GET' %}
+
+    <div class="container-index">
+        <div class="container-spy">
+            <div class="container-spy-graph-child-1">
+                {% include '_messages.html' %}
+                <div class="border">
+                    <a class="clickable-graph" href="/sp500">
+                        <img src="static/img/sp500_daily_prices.png" alt="O gráfico não pode ser mostrado">
+                    </a>
+                </div>
+            </div>
+            <div class="container-spy-graph-child-2">
+                <p align='justify' id="spy-info"></p>
+            </div>
+        </div>
+
+        <div class="container-dj">
+            <div class="container-dj-graph-child-1">
+                {% include '_messages.html' %}
+                <div class="border">
+                    <a class="clickable-graph" href="#">
+                        <img src="static/img/dji_daily_prices.png" alt="O gráfico não pode ser mostrado">
+                    </a>
+                </div>
+            </div>
+            <div class="container-dj-graph-child-2">
+                <p align='justify' id="dji-info"></p>
+            </div>
+        </div>
+
+        <div class="container-ndq">
+            <div class="container-ndq-graph-child-1">
+                {% include '_messages.html' %}
+                <div class="border">
+                    <a class="clickable-graph" href="#">
+                        <img src="static/img/ndq_comp_daily_prices.png" alt="O gráfico não pode ser mostrado">
+                    </a>
+                </div>
+            </div>
+            <div class="container-ndq-graph-child-2">
+                <p align='justify' id="ndq-info"></p>
+            </div>
+        </div>
+
+        <div class="container-russell">
+            <div class="container-russell-graph-child-1">
+                {% include '_messages.html' %}
+                <div class="border">
+                    <a class="clickable-graph" href="#">
+                        <img src="static/img/russell_2000_daily_prices.png" alt="O gráfico não pode ser mostrado">
+                    </a>
+                </div>
+            </div>
+            <div class="container-russell-graph-child-2">
+                <p align='justify' id="russell-info"></p>
+            </div>
+
+            {% endif %}
+        </div>
+    </div>
+
+
+
+
+</body>
+{% endblock %}
+
+</html>

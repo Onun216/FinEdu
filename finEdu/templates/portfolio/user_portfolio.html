@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FinEdu-My-Portfolio</title>
+
+    <link rel="stylesheet" href="{{url_for('static', filename='css/style.css')}}">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+
+</head>
+{% block content %}
+{% include 'navbar.html' %}
+<script defer src="static/js/my_portfolio.js"></script>
+
+<body>
+    <div class="wrapper-portfolio side-panel-open">
+        <div class="user-portfolio">
+            <div class="container-portfolio-info">
+                <div class="container-portfolio-info-child-1">
+                    <div class="container-add-constituent">
+                        <form action="{{url_for('add_constituent')}}" class="add-constituent" method="post">
+                            <input type="text" id="constituent-ticker" name="constituent-ticker" placeholder="Ticker"
+                                class="add-constituent-input">
+                            <input type="text" id="constituet-quantity" name="constituent-quantity"
+                                placeholder="Quantidade" class="add-constituent-input">
+                            <input type="text" id="constituet-price" name="constituent-price" placeholder="Preço"
+                                class="add-constituent-input">
+                            <input type="date" class="add-constituent-input" name="purchase-date">
+
+                            <button type="submit" class="btn-add-constituent">Adicionar</button>
+                        </form>
+
+                        <form action="{{url_for('user_portfolio')}}" class="name-portfolio" method="post">
+                            <button type="submit" class="btn-add-constituent">Guardar</button>
+                        </form>
+                    </div>
+                </div>
+
+
+                <div class="container-portfolio-info-child-2">
+                    <div class="container-dividends">
+                        <table class="portfolio-dividends-table">
+
+                            <thead>
+                                <th>Ano</th>
+                                <th>Dividendos</th>
+                                <th>YoY</th>
+                            </thead>
+
+                            <tbody>
+                                {% for date, dividends in div_growth.items() %}
+                                <tr class="portfolio-dividends-detail">
+                                    <td>{{date}}</td>
+                                    <td>€{{dividends['amount']}}</td>
+                                    <td>{{"%0.2f"|format(dividends['YoY']|float)}}%</td>
+                                </tr>
+                                {% endfor %}
+
+                            </tbody>
+
+                        </table>
+                    </div>
+                </div>
+
+
+                <div class="container-portfolio-info-child-3">
+
+                </div>
+            </div>
+
+            {% for key, constituent in portfolio.items() %}
+            <div class="container-portfolio-detail">
+                <div class="accordion">
+                    <button type="button" class="accordion_button">{{key}}</button>
+                    <div class="accordion_content" id="{{key}}">
+                        <table class="portfolio-detail-table">
+                            <thead>
+                                <th></th>
+                                <th>Data</th>
+                                <th>Quantidade</th>
+                                <th>Preço</th>
+                                <th>Custo</th>
+                            </thead>
+                            <tbody>
+                                {% for purchase in constituent %}
+                                {% set totalCost = purchase['quantity']|int * purchase['price']|float %}
+                                <tr class="constituent-detail">
+                                    <td>
+                                        <a href="{{url_for('remove_from_portfolio', operation_code=operation_code)}}" class="remove-portfolio-constituent">
+                                            <span class="material-symbols-outlined">
+                                                delete
+                                            </span>
+                                        </a>
+                                    </td>
+                                    <td>{{purchase['date']}}</td>
+                                    <td>{{purchase['quantity']}}</td>
+                                    <td>{{purchase['price']}}</td>
+                                    <td>{{totalCost}}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        <table class="portfolio-detail-extra-table">
+                            <tr>
+                                <td style="background-color: white; font-weight: bold;">
+                                    Total (€)
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <!--Side panel-->
+        <button class="side-panel-constituents-toggle" type="button">
+            <span class="material-symbols-outlined sp-icon-open">keyboard_double_arrow_left</span>
+            <span class="material-symbols-outlined sp-icon-close">keyboard_double_arrow_right</span>
+        </button>
+        <div class="side-panel-constituents">
+            Posições a adicionar ao portfólio:
+            {% for operation_code, constituent in session['new_constituents'].items()%}
+            {% for ticker, detail in constituent.items() %}
+            <div class="container-show-container">
+                <a href="{{url_for('remove_constituent', operation_code=operation_code)}}"
+                    class="remove-session-constituent">
+                    <span class="material-symbols-outlined remove-session-constituent">
+                        delete
+                    </span>
+                </a>
+                <p class="show-constituent">{{ticker}} {{detail['price']}} x{{detail['quantity']}}</p>
+                {% endfor %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!--JavaScript-->
+    <script>
+        document.querySelectorAll('.accordion_button').forEach(button => {
+            button.addEventListener('click', () => {
+                const accordionContent = button.nextElementSibling;
+
+                button.classList.toggle('accordion_button--active');
+
+                if (button.classList.contains('accordion_button--active')) {
+                    accordionContent.style.maxHeight = accordionContent.scrollHeight + 'px';
+                } else {
+                    accordionContent.style.maxHeight = 0;
+                }
+            });
+        });
+    </script>
+
+</body>
+
+{% endblock %}
+
+</html>

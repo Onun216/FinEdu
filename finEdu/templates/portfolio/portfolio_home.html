@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FinEdu-Portfolio-Home</title>
+
+    <link rel="stylesheet" href="{{url_for('static', filename='css/style.css')}}">
+</head>
+{% block content %}
+{% include 'navbar.html' %}
+<script defer src=""></script>
+
+<body>
+
+    <div class="container-portfolio">
+        <div class="container-portfolio-card">
+            <div class="card">
+                <div class="container-portfolio-card-body">
+                    <h5 class="portfolio-card-title">Simulador</h5>
+                    <p class="card-text"></p>
+                    <a href="#">
+                        <button class="portfolio-btn-go-to">Avançar</button>
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="container-portfolio-card">
+            <div class="card">
+                <div class="container-portfolio-card-body">
+                    <h5 class="portfolio-card-title">Portfolio</h5>
+                    <p class="card-text"></p>
+                    <a href="/portfolio">
+                        <button class="portfolio-btn-go-to">Avançar</button>
+                    </a>
+                </div>
+            </div>
+        </div>
+       
+
+    </div>
+
+</body>
+
+
+{% endblock %}
+
+</html>
